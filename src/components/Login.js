@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
@@ -35,14 +36,21 @@ const SignInForm = () => {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setError(null);
-    auth.signInWithEmailAndPassword(email, password)
-      .catch((error) => {
-        setError(error.message);
-      })   ;
-    };
+    const sigin = (event) => {
+      event.preventDefault();
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          console.log(userCredential)
+          const user = userCredential.user;
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setError(errorMessage);
+          setError(errorCode);
+        });
+    }
 
   return (
     <Grid container justifyContent="center" alignItems="center" height="100vh">
@@ -54,7 +62,7 @@ const SignInForm = () => {
           <Typography variant="h4" align="center" mb={3}>
             Login
           </Typography>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={sigin}>
             <Box sx={{ mb: 2 }}>
               <TextField
                 label="Email"

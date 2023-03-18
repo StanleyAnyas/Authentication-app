@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
+import { auth } from "../Firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 import {
   Button,
@@ -33,6 +35,11 @@ const ResetPassword = () => {
         if (password !== confirmPassword) {
             setError("Passwords don't match");
             return;
+        }else{
+            sendPasswordResetEmail(auth, email)
+            .catch((error) => {
+              setError(error.message);
+            });
         }
     };
 

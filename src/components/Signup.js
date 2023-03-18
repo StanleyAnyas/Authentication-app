@@ -8,6 +8,7 @@ import { Button, Grid, TextField } from "@mui/material";
 import Checkbox from '@mui/material/Checkbox';
 import { Link, Routes, Route, BrowserRouter as Router } from 'react-router-dom';
 import SignInForm from './Login';
+import { sendEmailVerification } from "firebase/auth";
 
 
 
@@ -56,6 +57,7 @@ const SignUpForm = () => {
     }
      try {
             const userCredential = createUserWithEmailAndPassword(auth, email, password);
+            sendEmailVerification(auth.currentUser)
             const user = userCredential.user;
         } catch (error) {
             setError(error.message);
@@ -68,7 +70,7 @@ const SignUpForm = () => {
       <Grid item xs={10} sm={6} md={4}>
         <Paper elevation={3} sx={{ p: 3 }}>
           <Typography variant="h4" align="center" mb={3}>
-            Create an Account
+            Create Account
           </Typography>
           <Typography variant="body2" align="center" mt={2} style={{color: "red"}}>
             Fields marked with * are required

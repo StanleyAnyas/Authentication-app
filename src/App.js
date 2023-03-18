@@ -5,6 +5,7 @@ import SignInForm from './components/Login';
 import SignUpForm from './components/Signup';
 import ResetPassword from './components/ResetPassword';
 import Homepage from './components/Homepage';
+import NavigationBar from './components/Navigation';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { AuthProvider } from './components/AuthProvider';
 
@@ -19,6 +20,7 @@ function App() {
           <Route path="/login" element={<SignInForm />} />
           <Route path="/signup" element={<SignUpForm />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
+          <Route path="/navigation" element={<NavigationBar />} />
         </Routes>
       </Router>
       </AuthProvider>
