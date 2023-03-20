@@ -24,6 +24,7 @@ const SignUpForm = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [displayName, setdisplayName] = useState("");
   const [error, setError] = useState(null);
   const [checked, setChecked] = useState(false);
@@ -58,12 +59,20 @@ const SignUpForm = () => {
   const handleCheckedChange = (event) => {
     setChecked(event.target.checked);
   };
-
+  
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
+  const handleClickShowConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleMouseDownConfirmPassword = (event) => { 
     event.preventDefault();
   };
 
@@ -161,7 +170,7 @@ const SignUpForm = () => {
             <Box sx={{ mb: 2 }}>
                 <TextField
                     label="Confirm Password"
-                    type={showPassword ? "text" : "password"}
+                    type={showConfirmPassword ? "text" : "password"}
                     value={confirmPassword}
                     onChange={handleConfirmPasswordChange}
                     fullWidth
@@ -171,11 +180,11 @@ const SignUpForm = () => {
                         <InputAdornment position="end">
                           <IconButton
                             aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
+                            onClick={handleClickShowConfirmPassword}
+                            onMouseDown={handleMouseDownConfirmPassword}
                             edge="end"
                           >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                            {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                           </IconButton>
                         </InputAdornment>
                       ),
