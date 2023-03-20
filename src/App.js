@@ -12,17 +12,18 @@ function App() {
   return (
     <div className="App">
       <AuthProvider>
-        <TemporaryDrawer />
         <Router>
           <Link to="/">Home</Link>
+          <TemporaryDrawer />
+          <Homepage />
           <Routes>
-            <Route path="/" element={<Homepage />} />
             <Route path="/login" element={<SignInForm />} />
             <Route path="/signup" element={<SignUpForm />} />
             <Route path="/resetpassword" element={<ResetPassword />} />
           </Routes>
         </Router>
       </AuthProvider>
+      
     </div>
   );
 }

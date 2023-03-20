@@ -121,6 +121,5 @@ export default function Homepage() {
         </AppBar>
         <TemporaryDrawer state={state} setState={setState} toggleDrawer={toggleDrawer} list={list} />
       </Box>
-      
   );
 }
