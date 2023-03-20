@@ -1,27 +1,44 @@
-import { AppBar, Toolbar, IconButton, Typography } from '@mui/material';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
 
-function NavigationBar() {
+export default function TemporaryDrawer() {  
+
+  const [state, setState] = React.useState({
+    left: false,
+  });
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+
+    setState({ ...state, [anchor]: open });
+  }
+
+  const list = (anchor) => (
+    <Box
+      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+    </Box>
+  );
+
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#333' }}>
-      <Toolbar sx={{ display: 'flex', flexDirection: "column" }}>
-        <IconButton>
-          {/* Add icon here */}
-        </IconButton>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          My App
-        </Typography>
-        <Typography variant="subtitle1">
-          Home
-        </Typography>
-        <Typography variant="subtitle1">
-          About
-        </Typography>
-        <Typography variant="subtitle1">
-          Contact
-        </Typography>
-      </Toolbar>
-    </AppBar>
+    <div>
+      {["left"].map((anchor) => (
+        <React.Fragment key={anchor}>
+          <Drawer
+            anchor={anchor}
+            open={state[anchor]}
+            onClose={toggleDrawer(anchor, false)}
+          >
+            {list(anchor)}
+          </Drawer>
+        </React.Fragment>
+      ))}
+    </div>
   );
 }
-
-export default NavigationBar;
