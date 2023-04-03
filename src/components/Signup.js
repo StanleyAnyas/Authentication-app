@@ -59,7 +59,7 @@ const SignUpForm = () => {
   const handleCheckedChange = (event) => {
     setChecked(event.target.checked);
   };
-  
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -111,6 +111,7 @@ const SignUpForm = () => {
 
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
   return (
+    <div style={{paddingBottom: 1112}}>
     <AuthContext.Provider value={{ email, displayName }}>
     <Grid container justifyContent="center" alignItems="center" height="100vh">
       <Grid item xs={10} sm={6} md={4}>
@@ -200,7 +201,7 @@ const SignUpForm = () => {
                 Sign Up
             </Button>
             <Typography variant="body2" align="center" mt={2}>
-            <Checkbox {...label} onClick={handleCheckedChange} /> By signing up, you agree to our <span><a href="{}">Terms of Service</a></span> and <span><a href="{}">Privacy Policy</a></span>
+            <Checkbox {...label} onClick={handleCheckedChange} /> By signing up, you agree to our <span><a href="{}" target={"_blank"}>Terms of Service</a></span> and <span><a href="{}" target={"_blank"}>Privacy Policy</a></span>
             </Typography>
             <Typography variant="body2" align="center" mt={2}>
                 Have an account already? <span><a href="/login">Login</a></span>
@@ -215,6 +216,7 @@ const SignUpForm = () => {
     </Grid>
     {isSignedUp && <LandingPage displayName={displayName} />}
     </AuthContext.Provider>
+    </div>
   );
 };
 

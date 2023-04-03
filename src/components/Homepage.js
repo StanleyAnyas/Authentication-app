@@ -46,13 +46,13 @@ export default function Homepage() {
 
     const list = (anchor) => (
       <Box
-        sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+        sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250, zIndex: 3 }}
         role="presentation"
         onClick={toggleDrawer(anchor, false)}
         onKeyDown={toggleDrawer(anchor, false)}
       >
         <List>
-          {['Profile', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          {["Home", 'Profile', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
@@ -65,7 +65,7 @@ export default function Homepage() {
         </List>
         <Divider />
         <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
+          {['All mail', 'Trash', 'Spam', "Logout", "Delete accout"].map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
@@ -87,7 +87,7 @@ export default function Homepage() {
     </Router>
     
   return (
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ flexGrow: 1}}>
         {["left"].map((anchor) => (
         <React.Fragment key={anchor}>
           <Drawer
@@ -98,9 +98,9 @@ export default function Homepage() {
             {list(anchor)}
           </Drawer>
         </React.Fragment>
-      ))}
+       ))}
 
-        <AppBar position="static">
+        <AppBar position="fixed" style={{zIndex: 2}}>
           <Toolbar>
             <IconButton
               size="large"

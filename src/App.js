@@ -7,6 +7,7 @@ import Homepage from './components/Homepage';
 import TemporaryDrawer from './components/Navigation';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { AuthProvider } from './components/AuthProvider';
+//import { ThemeContext } from '@emotion/react';
 
 function App() {
   return (
