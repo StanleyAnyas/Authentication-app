@@ -1,11 +1,19 @@
 import React, { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { db } from '../Firebase';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import { auth } from "../Firebase";
-import { Route, BrowserRouter as Router, Routes, Link } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes, Link, useNavigate } from 'react-router-dom';
 import SignUpForm from './Signup';
 import ResetPassword from "./ResetPassword";
+import CircularProgress from '@mui/material/CircularProgress';
+import LandingPage from "./LandingPage";
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import {
   Button,
@@ -16,17 +24,21 @@ import {
 const SignInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
+  const navigate = useNavigate();
   <Router>
         <Link to="/signup"></Link>
         <Link to="/resetpassword"></Link>
+        <Link to="/landingpage"></Link>
         <Routes>
             <Route path="/signup" element={<SignUpForm />} />
             <Route path="/resetpassword" element={<ResetPassword />} />
+            <Route path="/landingpage" element={<LandingPage />} />
         </Routes>
     </Router>
-
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
@@ -35,16 +47,38 @@ const SignInForm = () => {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setError(null);
-    auth.signInWithEmailAndPassword(email, password)
-      .catch((error) => {
-        setError(error.message);
-      })   ;
-    };
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const signIn = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    
+    try {
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      const userRef = db.ref(`users/${user.uid}`);
+      userRef.once("value", (snapshot) => {
+        const userData = snapshot.val();
+        if (userData) {
+          navigate("/landingpage");
+        } else {
+          setError("User does not exist in database");
+        }
+      });
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
   return (
+    <div style={{paddingBottom: 1112}}>
     <Grid container justifyContent="center" alignItems="center" height="100vh">
       <Grid item xs={10} sm={6} md={4}>
         <Paper elevation={3} sx={{ p: 3 }}>
@@ -54,7 +88,7 @@ const SignInForm = () => {
           <Typography variant="h4" align="center" mb={3}>
             Login
           </Typography>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={signIn}>
             <Box sx={{ mb: 2 }}>
               <TextField
                 label="Email"
@@ -68,11 +102,25 @@ const SignInForm = () => {
             <Box sx={{ mb: 2 }}>
               <TextField
                 label="Password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={handlePasswordChange}
                 fullWidth
                 required
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Box>
             <Button
@@ -90,12 +138,14 @@ const SignInForm = () => {
                 Forgot your password? <span><a href="/resetpassword">Reset password</a></span>
             </Typography>
             <Typography variant="body2" align="center" mt={2}>
+                {isLoading && <CircularProgress />}
                 {error ? <p>{error}</p> : null}
             </Typography>
           </form>
         </Paper>
       </Grid>
     </Grid>
+    </div>
   );
 };
 

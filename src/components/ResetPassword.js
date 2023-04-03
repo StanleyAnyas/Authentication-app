@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
+import { auth } from "../Firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
 
 import {
   Button,
@@ -14,6 +20,8 @@ const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -27,12 +35,33 @@ const ResetPassword = () => {
         setConfirmPassword(event.target.value);
     };
 
+    const handleClickShowPassword = () => {
+      setShowPassword(!showPassword);
+    };
+
+    const handleClickShowConfirmPassword = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    };
+
+    const handleMouseDownPassword = (event) => {
+      event.preventDefault();
+    };
+  
+    const handleMouseDownConfirmPassword = (event) => { 
+      event.preventDefault();
+    };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     setError(null);
         if (password !== confirmPassword) {
             setError("Passwords don't match");
             return;
+        }else{
+            sendPasswordResetEmail(auth, email)
+            .catch((error) => {
+              setError(error.message);
+            });
         }
     };
 
@@ -66,6 +95,20 @@ const ResetPassword = () => {
                 onChange={handlePasswordChange}
                 fullWidth
                 required
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Box>
             <Box sx={{ mb: 2 }}>
@@ -76,6 +119,20 @@ const ResetPassword = () => {
                     onChange={handleConfirmPasswordChange}
                     fullWidth
                     required
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowConfirmPassword}
+                            onMouseDown={handleMouseDownConfirmPassword}
+                            edge="end"
+                          >
+                            {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                 />
             </Box>
             <Button
